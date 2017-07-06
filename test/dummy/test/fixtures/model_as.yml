@@ -1,0 +1,5 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  image: 'image.jpg'
+  images: ['image1.jpg', 'image2.jpg']

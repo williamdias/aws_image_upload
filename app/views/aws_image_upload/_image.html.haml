@@ -1,0 +1,8 @@
+.image.col-xs-4.col-md-3{ id: (id if defined? id) }
+  .preview
+    = image_tag image, class: 'thumbnail img-responsive' if defined? image
+  .error.file-too-large.label.label-danger.hidden= t('.file_too_large')
+  .error.upload-failed.label.label-danger.hidden= t('.upload_failed')
+  .progress.hidden
+    .progress-bar.progress-bar-info{ role: 'progressbar', style: 'width: 0%;', aria: { valuemin: '0', valuemax: '100' } }
+  .delete.btn.btn-link{ class: ('hidden' unless defined? image) }= fa_stacked_icon 'times', base: 'circle'

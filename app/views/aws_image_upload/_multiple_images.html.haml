@@ -1,0 +1,13 @@
+.aws_image_upload.row{ id: name }
+  .inputs
+    = file_field_tag :file, accept: 'image/png,image/gif,image/jpg', class: 'file hidden', multiple: true, data: { 'url': aws_presigned_post.url, 'form-data': aws_presigned_post.fields }
+    = form.hidden_field name, multiple: true, value: ''
+    - value.map!{ |v| { id: SecureRandom.hex(6), value: v } }.each do |v|
+      = form.hidden_field name, multiple: true, id: v[:id], value: v[:value]
+  .images
+    - value.each do |v|
+      = render 'image', id: v[:id], image: v[:value]
+  .placeholder.col-xs-4.col-md-3
+    = image_tag 'image_placeholder.png', class: 'thumbnail img-responsive'
+  .template.hidden
+    = render 'image'

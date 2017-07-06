@@ -1,0 +1,27 @@
+<%= form_for(model_a) do |f| %>
+  <% if model_a.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(model_a.errors.count, "error") %> prohibited this model_a from being saved:</h2>
+
+      <ul>
+      <% model_a.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :image %>
+    <%= f.aws_image_upload :image %>
+  </div>
+
+  <div class="field">
+    <%= f.label :images %>
+    <%= f.aws_image_upload :images, multiple: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

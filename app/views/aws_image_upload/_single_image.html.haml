@@ -1,0 +1,10 @@
+.aws_image_upload.row{ id: name }
+  .inputs
+    = file_field_tag :file, accept: 'image/png,image/gif,image/jpg', class: 'file hidden', data: { 'url': aws_presigned_post.url, 'form-data': aws_presigned_post.fields }
+    = form.hidden_field name
+  .images
+    = render 'image', id: SecureRandom.hex(6), image: value if value.present?
+  .placeholder.col-xs-4.col-md-3{ class: ('invisible' if value.present?) }
+    = image_tag 'image_placeholder.png', class: 'thumbnail img-responsive'
+  .template.hidden
+    = render 'image'

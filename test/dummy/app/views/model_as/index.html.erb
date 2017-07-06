@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Model As</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Image</th>
+      <th>Images</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @model_as.each do |model_a| %>
+      <tr>
+        <td><%= model_a.image %></td>
+        <td><%= model_a.images %></td>
+        <td><%= link_to 'Show', model_a %></td>
+        <td><%= link_to 'Edit', edit_model_a_path(model_a) %></td>
+        <td><%= link_to 'Destroy', model_a, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Model A', new_model_a_path %>
