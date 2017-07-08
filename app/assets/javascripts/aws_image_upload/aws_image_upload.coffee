@@ -24,6 +24,10 @@ upload_add = (elem, data) ->
   unless $(elem).prop('multiple')
     $("##{aws_image_upload_id}.aws_image_upload .placeholder").addClass('invisible')
   $(elem).val('')
+  prefix = $("##{aws_image_upload_id}.aws_image_upload .inputs .file").attr('data-key-prefix')
+  key = { key: "#{prefix}#{file.id}#{file.name.slice(file.name.lastIndexOf('.'))}" }
+  form_data = $.parseJSON($("##{aws_image_upload_id}.aws_image_upload .inputs .file")[0].dataset.formData)
+  data.formData = $.extend(form_data, key)
   data.process( ->
     elem.fileupload('process', data)
   ).done( ->

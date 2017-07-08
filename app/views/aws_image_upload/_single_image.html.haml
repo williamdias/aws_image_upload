@@ -1,6 +1,6 @@
 .aws_image_upload.row{ id: name }
   .inputs
-    = file_field_tag :file, accept: 'image/png,image/gif,image/jpg', class: 'file hidden', data: { 'url': aws_presigned_post.url, 'form-data': aws_presigned_post.fields }
+    = file_field_tag :file, accept: 'image/png,image/gif,image/jpg', class: 'file hidden', data: { 'url': aws_presigned_post.url, 'form-data': aws_presigned_post.fields, 'key-prefix': "cache/#{SecureRandom.uuid}/" }
     = form.hidden_field name
   .images
     = render 'image', id: SecureRandom.hex(6), image: value if value.present?
