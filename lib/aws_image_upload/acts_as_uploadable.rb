@@ -4,12 +4,12 @@ module AwsImageUpload
 
     included do
       class_attribute :aws_image_upload_fields
-      before_save :aws_image_upload_before_save
-      before_destroy :aws_image_upload_before_destroy
     end
 
     class_methods do
       def acts_as_uploadable(field)
+        before_save :aws_image_upload_before_save
+        before_destroy :aws_image_upload_before_destroy
         self.aws_image_upload_fields ||= []
         self.aws_image_upload_fields <<= field.to_sym
       end
@@ -66,12 +66,14 @@ module AwsImageUpload
       end
 
       def aws_image_upload_move_image(location)
+        return location if AwsImageUpload.config[:test_mode]
         scheme, host, object_key = AwsImageUpload::Aws.get_location_parts(location)
         new_object_key = object_key.starts_with?('cache/') ? AwsImageUpload::Aws.move_object(object_key) : object_key
         "#{scheme}://#{host}/#{new_object_key}"
       end
 
       def aws_image_upload_delete_image(location)
+        return if AwsImageUpload.config[:test_mode]
         _, _, object_key = AwsImageUpload::Aws.get_location_parts(location)
         AwsImageUpload::Aws.delete_object(object_key) if object_key.starts_with?('store/')
       end

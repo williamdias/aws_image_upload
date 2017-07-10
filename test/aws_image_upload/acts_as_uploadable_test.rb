@@ -6,13 +6,13 @@ class ActsAsUploadableTest < ActiveSupport::TestCase
     assert_includes ApplicationRecord.included_modules, AwsImageUpload::ActsAsUploadable
   end
 
-  test "should have before_save callback set in ApplicationRecord" do
-    before_save_callbacks = ApplicationRecord._save_callbacks.select{ |c| c.kind == :before }.map(&:filter)
+  test "should have before_save callback set in model if it acts as uploadable" do
+    before_save_callbacks = ModelA._save_callbacks.select{ |c| c.kind == :before }.map(&:filter)
     assert_includes before_save_callbacks, :aws_image_upload_before_save
   end
 
-  test "should have before_destroy callback set in ApplicationRecord" do
-    before_save_callbacks = ApplicationRecord._destroy_callbacks.select{ |c| c.kind == :before }.map(&:filter)
+  test "should have before_destroy callback set in model if it acts as uploadable" do
+    before_save_callbacks = ModelA._destroy_callbacks.select{ |c| c.kind == :before }.map(&:filter)
     assert_includes before_save_callbacks, :aws_image_upload_before_destroy
   end
 
@@ -23,6 +23,10 @@ class ActsAsUploadableTest < ActiveSupport::TestCase
 
   test "should have no aws_image_upload_fields if model does not act as uploadable" do
     assert_nil ModelB.aws_image_upload_fields
+  end
+
+  test "asd" do
+    ModelB.new
   end
 
   test "should call before_save callback if model acts as uploadable" do
@@ -116,6 +120,13 @@ class ActsAsUploadableTest < ActiveSupport::TestCase
     assert_equal 'https://bucket.s3.amazonaws.com/store/5084ef04-f3d2-4fbc-baec-b98b98b52d7f/07734a2d8c99.png', ModelA.new.send(:aws_image_upload_move_image, location)
   end
 
+  test "should return original location and not move image if test_mode is true" do
+    AwsImageUpload.config[:test_mode] = true
+    location = 'https://bucket.s3.amazonaws.com/cache%2F5084ef04-f3d2-4fbc-baec-b98b98b52d7f%2F07734a2d8c99.png'
+    assert_equal location, ModelA.new.send(:aws_image_upload_move_image, location)
+    AwsImageUpload.config[:test_mode] = false
+  end
+
   test "should delete image" do
     location = 'https://bucket.s3.amazonaws.com/store%2F5084ef04-f3d2-4fbc-baec-b98b98b52d7f%2F07734a2d8c99.png'
     AwsImageUpload::Aws.stub(:delete_object, true) do
@@ -126,6 +137,13 @@ class ActsAsUploadableTest < ActiveSupport::TestCase
   test "should not delete image if it's in temporary location" do
     location = 'https://bucket.s3.amazonaws.com/cache%2F5084ef04-f3d2-4fbc-baec-b98b98b52d7f%2F07734a2d8c99.png'
     assert_nil ModelA.new.send(:aws_image_upload_delete_image, location)
+  end
+
+  test "should not delete image if test_mode is true" do
+    AwsImageUpload.config[:test_mode] = true
+    location = 'https://bucket.s3.amazonaws.com/store%2F5084ef04-f3d2-4fbc-baec-b98b98b52d7f%2F07734a2d8c99.png'
+    assert_nil ModelA.new.send(:aws_image_upload_delete_image, location)
+    AwsImageUpload.config[:test_mode] = false
   end
 
 end
