@@ -43,7 +43,7 @@ module AwsImageUpload
         new_value = send(field)
         old_value = eval("#{field}_changed?") ? eval("#{field}_was") : nil
         aws_image_upload_delete_image(old_value) if old_value
-        new_value = aws_image_upload_move_image(new_value)
+        new_value = new_value.present? ? aws_image_upload_move_image(new_value) : nil
         send("#{field}=", new_value)
       end
 
@@ -51,6 +51,7 @@ module AwsImageUpload
         new_values = send(field)
         old_values = eval("#{field}_changed?") ? eval("#{field}_was") : []
         old_values.delete_if { |i| new_values.include?(i) }.each { |i| aws_image_upload_delete_image(i) }
+        new_values.delete_if { |i| i.blank? }
         new_values.map!{ |i| aws_image_upload_move_image(i) }
         send("#{field}=", new_values)
       end

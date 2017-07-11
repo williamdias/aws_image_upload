@@ -84,6 +84,13 @@ class ActsAsUploadableTest < ActiveSupport::TestCase
     end
   end
 
+  test "should not call aws_image_upload_move_image if fields are empty" do
+    obj = ModelA.new(image: '', images: [''])
+    obj.save
+    assert_nil obj.image
+    assert_empty obj.images
+  end
+
   test "should call aws_image_upload_delete_image only for images that have been removed" do
     mock = MiniTest::Mock.new
     mock.expect(:call, nil, ['image.jpg'])
