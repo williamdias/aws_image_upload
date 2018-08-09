@@ -25,10 +25,6 @@ class ActsAsUploadableTest < ActiveSupport::TestCase
     assert_nil ModelB.aws_image_upload_fields
   end
 
-  test "asd" do
-    ModelB.new
-  end
-
   test "should call before_save callback if model acts as uploadable" do
     mock = MiniTest::Mock.new.expect(:call, nil, [])
     obj = ModelA.new(image: 'image.jpg', images: ['image1.jpg', 'image2.jpg'])
